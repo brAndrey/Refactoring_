@@ -1,6 +1,7 @@
 package com.example.refactoring
 
 interface Repository {
+
     fun isEnabled(): Boolean
 
     fun changeEnabled(enabled: Boolean)

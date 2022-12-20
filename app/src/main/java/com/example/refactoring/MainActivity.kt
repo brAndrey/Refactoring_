@@ -16,24 +16,19 @@ class MainActivity : AppCompatActivity() {
 
         val view = findViewById<View>(R.id.view)
 
-        when {
-            viewModel.isEnabled -> {
-                switchCompat.isChecked = true
-                view.visibility = View.VISIBLE
-            }
-            else -> {
-                switchCompat.isChecked = false
-                view.visibility = View.GONE
-            }
-        }
 
-        switchCompat.setOnCheckedChangeListener { _, b ->
-            viewModel.changeEnabled(b)
-            when {
-                b -> view.visibility = View.VISIBLE
-                else -> view.visibility = View.GONE
-            }
+        val enaibld= viewModel.isEnabled
+        switchCompat.isChecked=enaibld
+        appyView(view,enaibld)
+
+        switchCompat.setOnCheckedChangeListener { _, isChacked ->
+            viewModel.changeEnabled(isChacked)
+            appyView(view,isChacked)
         }
 
     }
+    private fun appyView(view: View, enaivld:Boolean){
+        view.visibility=if (enaivld) View.VISIBLE else View.GONE
+    }
+
 }
