@@ -14,5 +14,4 @@ interface Repository {
             this.enabled = enabled
         }
     }
-
 }

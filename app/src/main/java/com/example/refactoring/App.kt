@@ -8,6 +8,6 @@ class App: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        viewModel = MainViewModel(Repository.Base())
+        viewModel = MainViewModel(Communication.Base(),Repository.Base())
     }
 }

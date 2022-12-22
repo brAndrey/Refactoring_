@@ -3,6 +3,7 @@ package com.example.refactoring
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.CompoundButton
 import androidx.appcompat.widget.SwitchCompat
 
 class MainActivity : AppCompatActivity() {
@@ -16,19 +17,36 @@ class MainActivity : AppCompatActivity() {
 
         val view = findViewById<View>(R.id.view)
 
-
-        val enaibld= viewModel.isEnabled
-        switchCompat.isChecked=enaibld
-        appyView(view,enaibld)
+        viewModel.obsorve(this){
+            it.apply(view,switchCompat)
+        }
 
         switchCompat.setOnCheckedChangeListener { _, isChacked ->
             viewModel.changeEnabled(isChacked)
-            appyView(view,isChacked)
         }
 
     }
-    private fun appyView(view: View, enaivld:Boolean){
-        view.visibility=if (enaivld) View.VISIBLE else View.GONE
+}
+
+sealed class State {
+    abstract fun apply(view: View, compoundButton: CompoundButton)
+
+    class Initial(
+        private val isEnabled: Boolean,
+    ) : State() {
+        override fun apply(view: View, compoundButton: CompoundButton) {
+            compoundButton.isChecked = isEnabled
+            (if (isEnabled) On() else Off()).apply(view, compoundButton)
+        }
     }
 
+    abstract class Abstract(private val visibility: Int) : State() {
+        override fun apply(view: View, compoundButton: CompoundButton) {
+            view.visibility = visibility
+        }
+    }
+
+    class On : Abstract(View.VISIBLE)
+
+    class Off : Abstract(View.GONE)
 }
