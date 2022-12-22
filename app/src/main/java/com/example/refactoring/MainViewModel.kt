@@ -1,17 +1,21 @@
 package com.example.refactoring
 
+import android.icu.number.NumberFormatter.GroupingStrategy
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
 class MainViewModel(
     private val communication: Communication,
-    private val repository: Repository
+    private val repository: Repository,
+    private val choouseStateStrategy: Map.ChoouseState
 
 ) : Observe {
 
     init {
-        communication.map(State.Initial(repository.isEnabled()) )
+        repository.isEnabled().let { enaibld ->
+            communication.map(State.Initial(enaibld, choouseStateStrategy.map(enaibld)))
+        }
     }
 
     override fun obsorve(owner: LifecycleOwner, observer: Observer<State>) {
@@ -20,7 +24,16 @@ class MainViewModel(
 
     fun changeEnabled(enabled: Boolean) {
         repository.changeEnabled(enabled)
-        communication.map(if (repository.isEnabled()) State.On() else State.Off())
+        communication.map(choouseStateStrategy.map(enabled))
+    }
+}
+
+interface Map<S,R>{
+    fun map(sourse:S):R
+    class ChoouseState():Map<Boolean,State> {
+        override fun map(sourse: Boolean): State {
+            return if (sourse) State.On()else State.Off()
+        }
     }
 }
 

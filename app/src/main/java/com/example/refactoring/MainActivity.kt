@@ -33,10 +33,11 @@ sealed class State {
 
     class Initial(
         private val isEnabled: Boolean,
+        private val state: State
     ) : State() {
         override fun apply(view: View, compoundButton: CompoundButton) {
             compoundButton.isChecked = isEnabled
-            (if (isEnabled) On() else Off()).apply(view, compoundButton)
+            state.apply(view, compoundButton)
         }
     }
 
