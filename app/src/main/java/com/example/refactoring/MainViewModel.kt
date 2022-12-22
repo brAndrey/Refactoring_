@@ -1,8 +1,6 @@
 package com.example.refactoring
 
-import android.icu.number.NumberFormatter.GroupingStrategy
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
 class MainViewModel(
@@ -17,7 +15,7 @@ class MainViewModel(
             communication.map(State.Initial(enaibld, choouseStateStrategy.map(enaibld)))
         }
     }
-
+// наблюдатель состояния
     override fun obsorve(owner: LifecycleOwner, observer: Observer<State>) {
         communication.obsorve(owner, observer)
     }
@@ -37,25 +35,4 @@ interface Map<S,R>{
     }
 }
 
-interface Communication : Observe {
 
-    fun map(value: State)
-
-    class Base(
-        private val liveData: MutableLiveData<State> = MutableLiveData()
-    ) : Communication {
-
-        // TODO class Observer< > выяснить что за класс
-        override fun obsorve(owner: LifecycleOwner, observer: Observer<State>) {
-            liveData.observe(owner, observer)
-        }
-
-        override fun map(value: State) {
-            liveData.value = value
-        }
-    }
-}
-
-interface Observe {
-    fun obsorve(owner: LifecycleOwner, observer: Observer<State>)
-}
